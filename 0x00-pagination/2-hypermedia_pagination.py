@@ -39,20 +39,17 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        assert isinstance(page, int)
-        assert isinstance(page_size, int)
-        assert page > 0
-        assert page_size > 0
+        """returns data"""
+        assert isinstance(page, int) and isinstance(page_size, int)
+        assert page > 0 and page_size > 0
 
-        ind = index_range(page, page_size)
+        start, end = index_range(page, page_size)
+        end = min(end, len(self.dataset()))
 
-        data = self.dataset()
+        if start > len(self.dataset()):
+            return []
 
-        for value in ind:
-            if value < 0 or value >= len(data):
-                return []
-
-        return data[ind[0]:ind[1]]
+        return self.__dataset[start:end]
 
     def get_hyper(self, page: int = 1, page_size: int = 10) -> List[List]:
         assert isinstance(page, int)
