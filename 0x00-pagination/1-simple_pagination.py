@@ -39,11 +39,14 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        """ get paginated data with a given page and page_size """
         assert isinstance(page, int) and isinstance(page_size, int)
         assert page > 0 and page_size > 0
+
+        data = self.dataset()
         start, end = index_range(page, page_size)
-        end = min(end, len(self.dataset()))
-        if start > len(self.dataset()):
+        end = min(end, len(data))
+
+        if start > len(data):
             return []
-        return self.__dataset[start:end]
+
+        return data[start:end]
