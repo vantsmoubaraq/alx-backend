@@ -1,22 +1,11 @@
 #!/usr/bin/env python3
-
 """
-Return a tuple of size two containing a start index and an end index
+Pagination Module
+Server class
 """
-
 import csv
 import math
-from typing import Tuple, List
-
-
-def index_range(page: int, page_size: int) -> Tuple:
-    """
-    Return a tuple of size two containing
-    a start index and an end index
-    """
-    start = (page - 1) * page_size
-    end = page * page_size
-    return (start, end)
+from typing import List
 
 
 class Server:
@@ -39,14 +28,18 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        """ get paginated data with a given page and page_size """
         assert isinstance(page, int) and isinstance(page_size, int)
         assert page > 0 and page_size > 0
-
-        ind = index_range(page, page_size)
-
-        data = self.dataset()
-
-        if ind[1] > len(data):
+        start, end = index_range(page, page_size)
+        end = min(end, len(self.dataset()))
+        if start > len(self.dataset()):
             return []
+        return self.__dataset[start:end]
 
-        return data[ind[0]:ind[1]]
+
+def index_range(page: int, page_size: int) -> tuple:
+    """ return a start index and an end index corresponding to the range """
+    start = sum([page_size for i in range(page - 1)]) if page > 0 else 0
+    end = page_size + start
+    return (start, end)
