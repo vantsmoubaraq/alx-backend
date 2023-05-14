@@ -61,7 +61,7 @@ class Server:
 
         total_pages = math.ceil(len(data) / page_size)
         next_page = (page + 1) if page < total_pages else None
-        prev_page = (page - 1) if page >= 1 else None
+        prev_page = (page - 1) if page > 1 else None
         page_info = {"page_size": page_size, "page": page,
                      "data": self.get_page(page, page_size),
                      "next_page": next_page, "prev_page": prev_page,
