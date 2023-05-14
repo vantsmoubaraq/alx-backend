@@ -19,6 +19,16 @@ def index_range(page: int, page_size: int) -> Tuple:
     return (start, end)
 
 
+Hyper = TypedDict('Hyper', {
+    "page_size": int,
+    "page": int,
+    "data": List[List],
+    "next_page": Optional[int],
+    "prev_page": Optional[int],
+    "total_pages": int
+})
+
+
 class Server:
     """Server class to paginate a database of popular baby names.
     """
