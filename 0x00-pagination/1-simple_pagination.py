@@ -46,8 +46,7 @@ class Server:
 
         data = self.dataset()
 
-        for value in ind:
-            if value < 0 or value > len(data):
-                return []
+        if ind[1] > len(data):
+            return []
 
         return data[ind[0]:ind[1]]
