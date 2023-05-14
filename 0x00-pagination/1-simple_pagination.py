@@ -1,11 +1,22 @@
 #!/usr/bin/env python3
+
 """
-Pagination Module
-Server class
+Return a tuple of size two containing a start index and an end index
 """
+
 import csv
 import math
-from typing import List
+from typing import Tuple, List
+
+
+def index_range(page: int, page_size: int) -> Tuple:
+    """
+    Return a tuple of size two containing
+    a start index and an end index
+    """
+    start = (page - 1) * page_size
+    end = page * page_size
+    return (start, end)
 
 
 class Server:
@@ -36,10 +47,3 @@ class Server:
         if start > len(self.dataset()):
             return []
         return self.__dataset[start:end]
-
-
-def index_range(page: int, page_size: int) -> tuple:
-    """ return a start index and an end index corresponding to the range """
-    start = sum([page_size for i in range(page - 1)]) if page > 0 else 0
-    end = page_size + start
-    return (start, end)
