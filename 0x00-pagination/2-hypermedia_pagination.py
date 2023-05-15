@@ -63,6 +63,9 @@ class Server:
 
         if len(data) == 0:
             page_size = 0
+        elif isinstance(len(self.dataset()) / page_size, float):
+            if page == total_pages:
+                page_size = len(self.dataset()) % page_size
 
         page_info = {"page_size": page_size, "page": page,
                      "data": data,
