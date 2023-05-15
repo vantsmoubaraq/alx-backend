@@ -55,13 +55,15 @@ class Server:
         assert isinstance(page, int) and isinstance(page_size, int)
         assert page > 0 and page_size > 0
 
-        start, end = index_range(page, page_size)
-        end = min(end, len(self.dataset()))
         data = self.get_page(page, page_size)
 
         total_pages = math.ceil(len(self.dataset()) / page_size)
         next_page = (page + 1) if page < total_pages else None
         prev_page = (page - 1) if page > 1 else None
+
+        if len(data) == 0:
+            page_size = 0
+
         page_info = {"page_size": page_size, "page": page,
                      "data": data,
                      "next_page": next_page, "prev_page": prev_page,
