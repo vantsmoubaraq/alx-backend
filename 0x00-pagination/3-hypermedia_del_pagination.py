@@ -48,26 +48,22 @@ class Server:
         add = False
         data = []
         count = 0
-        start_key = None
 
-        for key, value in dataset.items():
+        for item in dataset:
             count += 1
-            if key == index:
+            if count == index:
                 add = True
 
-            if add:
-                print(f"value: {value}")
-                if dataset[key] is None:
-                    next_index += 1
-                    print("next_index")
-                else:
-                    data.append(value)
-
-            if key == next_index - 1:
+            if count == next_index:
+                add = False
                 break
+
+            if add:
+                if dataset.get(count) is None:
+                    next_index += 1
+                else:
+                    data.append(dataset[count])
 
         info = {"index": index, "next_index": next_index,
                 "page_size": page_size, "data": data}
         return info
-
-
