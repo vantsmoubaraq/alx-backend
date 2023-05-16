@@ -13,7 +13,7 @@ class MRUCache(BaseCaching):
     def __init__(self):
         super().__init__()
         self.time_stamp = {}
-    
+
     def put(self, key, item):
         """Assign value to cache"""
         recent_key = None
@@ -21,7 +21,7 @@ class MRUCache(BaseCaching):
             self.cache_data[key] = item
             recent = self.time_stamp[key] = datetime.datetime.now()
             recent_key = key
-        
+
         if len(self.cache_data) > self.MAX_ITEMS:
             min_time = datetime.datetime(year=1000, month=1, day=1)
             diff = recent - min_time
@@ -35,7 +35,7 @@ class MRUCache(BaseCaching):
             del self.time_stamp[second_recent]
             del self.cache_data[second_recent]
             print(f"DISCARD: {second_recent}")
-        
+
     def get(self, key):
         """Retrieve data from cache"""
         self.time_stamp[key] = datetime.datetime.now()
