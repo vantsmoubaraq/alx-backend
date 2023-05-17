@@ -1,81 +1,42 @@
 #!/usr/bin/env python3
+
 """
-This module implements a MRU caching algorithm.
+Implements class MRUCache
 """
-from base_caching import BaseCaching
 
-
-def get_mru_item(mru_dict):
-    """
-    Get the most recently used item from a dictionary of items.
-
-    Args:
-        mru_dict (dict): Dictionary of items to evaluate.
-
-    Returns:
-        The key of the most recently used item.
-    """
-    mru = None
-    for key, rank in mru_dict.items():
-        if mru is None:
-            mru = key
-        else:
-            mru = key if rank > mru_dict[mru] else mru
-    return mru
+import datetime
+BaseCaching = __import__("base_caching").BaseCaching
 
 
 class MRUCache(BaseCaching):
-    """
-    This class inherits from BaseCaching and is a caching system.
-    """
+    """Implements MRU cache"""
     def __init__(self):
         super().__init__()
-        self.mru_track = dict()
-        self.RANK = 0
+        self.time_stamp = {}
 
     def put(self, key, item):
-        """
-        Inserts a new key-value pair into the cache.
+        """Assign value to cache"""
+        recent_key = None
+        if key and item:
+            self.cache_data[key] = item
+            recent = self.time_stamp[key] = datetime.datetime.now()
+            recent_key = key
 
-        Args:
-            key (str): Key to insert into the cache.
-            item (str): Value to insert into the cache.
-
-        Returns:
-            Nothing.
-        """
-        if (key is None) or (item is None):
-            return
-
-        key_not_found = key not in self.cache_data
-        full_cache = len(self.cache_data) >= self.MAX_ITEMS
-        if key_not_found and full_cache:
-            mru_key = get_mru_item(self.mru_track)
-            try:
-                del self.mru_track[mru_key]
-                del self.cache_data[mru_key]
-            except KeyError:
-                raise Exception("Erro while discarding MRU item.")
-            print("DISCARD: {}".format(mru_key))
-
-        self.mru_track[key] = self.RANK
-        self.cache_data[key] = item
-        self.RANK += 1
+        if len(self.cache_data) > self.MAX_ITEMS:
+            min_time = datetime.datetime(year=1000, month=1, day=1)
+            diff = recent - min_time
+            second_recent = None
+            for key, value in self.time_stamp.items():
+                if key == recent_key:
+                    continue
+                if (recent - value) < diff:
+                    diff = recent - value
+                    second_recent = key
+            del self.time_stamp[second_recent]
+            del self.cache_data[second_recent]
+            print(f"DISCARD: {second_recent}")
 
     def get(self, key):
-        """
-        Retrieves a key-value pair from the cache.
-
-        Args:
-            key (str): Key to retrieve from the cache.
-
-        Returns:
-            Value associated with the key, or None if key not found.
-        """
-        if key is None:
-            return None
-
-        if key in self.cache_data:
-            self.mru_track[key] = self.RANK
-            self.RANK += 1
+        """Retrieve data from cache"""
+        self.time_stamp[key] = datetime.datetime.now()
         return self.cache_data.get(key)
