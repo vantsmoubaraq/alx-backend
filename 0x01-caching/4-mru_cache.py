@@ -38,5 +38,6 @@ class MRUCache(BaseCaching):
 
     def get(self, key):
         """Retrieve data from cache"""
-        self.time_stamp[key] = datetime.datetime.now()
+        if key in self.cache_data:
+            self.time_stamp[key] = datetime.datetime.now()
         return self.cache_data.get(key)
