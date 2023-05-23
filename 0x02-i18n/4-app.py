@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+"""Module instantiates babel object"""
+
+from flask import Flask, render_template, request
+from flask_babel import Babel
+from datetime import datetime
+
+app = Flask(__name__)
+babel = Babel(app)
+
+
+class Config(object):
+    """configures language """
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
+
+
+app.config.from_object(Config)
+
+
+@app.route("/", strict_slashes=False)
+def welcome():
+    """renders 4-index.html"""
+    return render_template("4-index.html")
+
+
+def get_locale():
+    """get best match"""
+    local = request.args.get("locale")
+    if local and local in app.config["LANGUAGES"]:
+        return local
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+babel.init_app(app, locale_selector=get_locale)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port="5000")
