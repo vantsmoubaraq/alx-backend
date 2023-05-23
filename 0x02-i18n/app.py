@@ -70,7 +70,7 @@ def get_locale():
 
 
 def get_timezone():
-    """Retrieve time zone
+    """Retrieve time zone"""
     tz = request.args.get("timezone")
     try:
         pytz.timezone(tz)
@@ -83,7 +83,7 @@ def get_timezone():
             pytz.timezone(tz)
             return tz
         except pytz.exceptions.UnknownTimeZoneError:
-            pass"""
+            pass
     return app.config["BABEL_DEFAULT_TIMEZONE"]
 
 
